@@ -30,7 +30,7 @@ project-job-tracker/
 
 No installations or dependencies required — runs entirely in the browser.
 ## screenshot
-![Project Job Tracker](Screenshot(672).png)
+![Project Job Tracker](Screenshot%20672.png)
 
 ## 📌 Future Improvements
 
