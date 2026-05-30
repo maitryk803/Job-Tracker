@@ -29,6 +29,8 @@ project-job-tracker/
 3. Start adding your job applications!
 
 No installations or dependencies required — runs entirely in the browser.
+## screenshot
+![Project Job Tracker](screenshot(672).png
 
 ## 📌 Future Improvements
 
