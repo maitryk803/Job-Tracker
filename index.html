@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JobTrackr — Job Application Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ============ HEADER / NAVBAR ============ -->
+  <header class="navbar">
+    <div class="brand">
+      <div class="logo">JT</div>
+      <h1>JobTrackr</h1>
+    </div>
+    <nav class="nav-links">
+      <a href="#dashboard" class="nav-link active" data-target="dashboard">Dashboard</a>
+      <a href="#applications" class="nav-link" data-target="applications">Applications</a>
+    </nav>
+    <div class="nav-actions">
+      <button id="themeToggle" class="icon-btn" title="Toggle theme">🌙</button>
+      <button id="addBtn" class="btn btn-primary">+ Add Application</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ============ DASHBOARD SECTION ============ -->
+    <section id="dashboard" class="page active">
+      <h2 class="page-title">Dashboard</h2>
+      <p class="page-subtitle">Track your job hunt at a glance.</p>
+
+      <!-- Stat cards: total / interviews / offers / rejected -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#dbeafe;color:#2563eb">📋</div>
+          <div>
+            <p class="stat-label">Total Applications</p>
+            <h3 id="statTotal">0</h3>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fef3c7;color:#d97706">🎯</div>
+          <div>
+            <p class="stat-label">Interviews</p>
+            <h3 id="statInterviews">0</h3>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#dcfce7;color:#16a34a">🏆</div>
+          <div>
+            <p class="stat-label">Offers</p>
+            <h3 id="statOffers">0</h3>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fee2e2;color:#dc2626">❌</div>
+          <div>
+            <p class="stat-label">Rejected</p>
+            <h3 id="statRejected">0</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Success rate + recent activity -->
+      <div class="dashboard-grid">
+        <div class="card">
+          <h3>Success Rate</h3>
+          <p class="muted">Offers vs total applications</p>
+          <div class="progress">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+          <p class="success-text"><span id="successRate">0</span>% success rate</p>
+        </div>
+        <div class="card">
+          <h3>Recent Activity</h3>
+          <ul id="recentList" class="recent-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ APPLICATIONS SECTION ============ -->
+    <section id="applications" class="page">
+      <h2 class="page-title">All Applications</h2>
+      <p class="page-subtitle">Manage every job you've applied for.</p>
+
+      <!-- Search + filter controls -->
+      <div class="controls">
+        <input type="text" id="searchInput" placeholder="🔍 Search by company or role..." />
+        <select id="statusFilter">
+          <option value="all">All Status</option>
+          <option value="Applied">Applied</option>
+          <option value="Assessment">Assessment</option>
+          <option value="Interview">Interview</option>
+          <option value="Offer">Offer</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+        <select id="sortOrder">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+        </select>
+      </div>
+
+      <!-- Applications table -->
+      <div class="table-wrapper card">
+        <table id="appTable">
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Role</th>
+              <th>Location</th>
+              <th>Salary</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="appTableBody"></tbody>
+        </table>
+        <p id="emptyState" class="empty-state" hidden>No applications found. Click "Add Application" to get started.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ MODAL: Add / Edit application ============ -->
+  <div id="modal" class="modal-overlay" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Add Application</h3>
+        <button class="icon-btn" id="closeModal">✕</button>
+      </div>
+      <form id="appForm">
+        <input type="hidden" id="appId" />
+        <div class="form-row">
+          <label>Company Name *
+            <input type="text" id="company" required />
+          </label>
+          <label>Job Role *
+            <input type="text" id="role" required />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Location
+            <input type="text" id="location" placeholder="Remote, NYC, etc." />
+          </label>
+          <label>Salary Range
+            <input type="text" id="salary" placeholder="$80k - $100k" />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Application Date *
+            <input type="date" id="date" required />
+          </label>
+          <label>Status *
+            <select id="status" required>
+              <option>Applied</option>
+              <option>Assessment</option>
+              <option>Interview</option>
+              <option>Offer</option>
+              <option>Rejected</option>
+            </select>
+          </label>
+        </div>
+        <label>Notes
+          <textarea id="notes" rows="3" placeholder="Recruiter contact, interview details..."></textarea>
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ DETAILS MODAL ============ -->
+  <div id="detailsModal" class="modal-overlay" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Application Details</h3>
+        <button class="icon-btn" id="closeDetails">✕</button>
+      </div>
+      <div id="detailsBody" class="details-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
